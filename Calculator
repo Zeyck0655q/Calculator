@@ -1,0 +1,145 @@
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QWidget, QLineEdit,
+                             QApplication, QHBoxLayout, QVBoxLayout, QPushButton)
+from functools import partial
+
+
+app = QApplication([])
+window = QWidget()
+window.setWindowTitle('Калькулятор')
+
+
+
+line_edit = QLineEdit()
+line_edit.setStyleSheet('border: 1px solid black;border-radius: 10px;background: white')
+window.setStyleSheet('border :1px black; background: black; font-size 40px')
+
+
+
+def calculate_result():
+    try:
+        
+        result = eval (line_edit.text())
+# Встановлює отриманий результат у вмісті лінії для введення
+        line_edit.setText(str(result))
+    except Exception as e:
+        
+    # У випадку помилки виводить повідомлення "Error" у лінії для введення
+        line_edit.setText("Error")
+
+
+
+
+def print_num(text):
+    line_edit.setText(line_edit.text() + text)
+
+
+def add_operation(operator):
+    line_edit.setText(line_edit.text() + operator)
+
+def clear_line_edit():
+    line_edit.clear()
+
+
+
+
+button_0 = QPushButton('0')
+button_1 = QPushButton('1')
+button_2 = QPushButton('2')
+button_3 = QPushButton('3')
+button_4 = QPushButton('4')
+button_5 = QPushButton('5')
+button_6 = QPushButton('6')
+button_7 = QPushButton('7')
+button_8 = QPushButton('8')
+button_9 = QPushButton('9')
+button_plus = QPushButton('+')
+button_plus.setStyleSheet('background-color:orange')
+button_minus = QPushButton('-')
+button_minus.setStyleSheet('background-color:orange')
+button_multiply = QPushButton('*')
+button_multiply.setStyleSheet('background-color:orange')
+button_divide = QPushButton('/')
+button_divide.setStyleSheet('background-color:orange')
+button_divide.setFixedWidth(112)
+button_dot = QPushButton('.')
+button_delete = QPushButton('CE')
+button_equals = QPushButton('=')
+
+buttons=[button_0,button_1,button_2,button_3,button_4,
+     button_5,button_6,button_7,button_8,button_9]
+
+button_0.setStyleSheet('background: gray')
+button_1.setStyleSheet('background: gray')
+button_2.setStyleSheet('background: gray')
+button_3.setStyleSheet('background: gray')
+button_4.setStyleSheet('background: gray')
+button_6.setStyleSheet('background: gray')
+button_5.setStyleSheet('background: gray')
+button_7.setStyleSheet('background: gray')
+button_8.setStyleSheet('background: gray')
+button_9.setStyleSheet('background: gray')
+button_delete.setStyleSheet('background: red')
+button_dot.setStyleSheet('background: gray')
+button_equals.setStyleSheet('background: blue')
+
+
+def click_connect():
+    for btn in buttons:
+        btn.clicked.connect(partial(print_num, btn.text()))
+
+button_equals.clicked.connect(calculate_result)
+button_plus.clicked.connect(partial(add_operation, '+'))
+button_minus.clicked.connect(partial(add_operation, '-'))
+button_multiply.clicked.connect(partial(add_operation,'*'))
+button_divide.clicked.connect(partial(add_operation, '/'))
+
+button_equals.clicked.connect(partial(add_operation, '='))
+button_delete.clicked.connect(partial( clear_line_edit))
+
+h1 = QHBoxLayout()
+h2 = QHBoxLayout()
+h3 = QHBoxLayout()
+h4 = QHBoxLayout()
+h5 = QHBoxLayout()
+
+h1.addWidget(button_7)
+h1.addWidget(button_8)
+h1.addWidget(button_9)
+h1.addWidget(button_plus)
+
+h2.addWidget(button_4)
+h2.addWidget(button_5)
+h2.addWidget(button_6)
+h2.addWidget(button_minus)
+
+
+h3.addWidget(button_1)
+h3.addWidget(button_2)
+h3.addWidget(button_3)
+h3.addWidget(button_multiply)
+
+
+h4.addWidget(button_0)
+h4.addWidget(button_dot)
+h4.addWidget(button_divide)
+
+
+h5.addWidget(button_delete)
+h5.addWidget(button_equals)
+
+main_layout = QVBoxLayout()
+main_layout.addWidget(line_edit)
+main_layout.addLayout(h1)
+main_layout.addLayout(h2)
+main_layout.addLayout(h3)
+main_layout.addLayout(h4)
+main_layout.addLayout(h5)
+
+
+
+
+window.setLayout(main_layout)
+click_connect()
+window.show()
+app.exec_()
